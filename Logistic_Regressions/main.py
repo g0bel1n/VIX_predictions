@@ -1,3 +1,4 @@
+# %%
 import numpy as np
 import matplotlib.pyplot as plt
 from LogReg import LogitRegression
@@ -47,3 +48,5 @@ if __name__ == '__main__':
     plt.legend(fontsize=12)
     plt.show()
     print("AUC  :", get_auc(fpr_values, tpr_values))
+
+# %%

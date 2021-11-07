@@ -1,3 +1,5 @@
+import sys             # Pour pouvoir importer 
+sys.path.append("..")  # depuis le fichier parent
 from Logistic_Regressions.computation_funcs import *
 
 
