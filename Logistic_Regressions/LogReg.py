@@ -1,6 +1,7 @@
-import sys             # Pour pouvoir importer 
-sys.path.append("..")  # depuis le fichier parent
+import sys  # Pour pouvoir importer
 from Logistic_Regressions.computation_funcs import *
+
+sys.path.append("..")  # depuis le fichier parent
 
 
 class LogitRegression:
@@ -11,24 +12,9 @@ class LogitRegression:
         self.alpha = alpha
         self.r = r
 
-    def update_coef_nrm(self, x, y):
-        print("beta shape", self.beta.shape)
-        b = np.linalg.inv(log_likelihood_hessian(self.beta,
-                                                                     x,
-                                                                     y,
-                                                                     self.penalization,
-                                                                     self.r,
-                                                                     self.alpha)) @ log_likelihood_gradient(self.beta,
-                                                                                                            x,
-                                                                                                            y,
-                                                                                                            self.penalization,
-                                                                                                            self.r,
-                                                                                                            self.alpha)
-
-        print("b shape  ", b.shape)
+    def update_coef_nrm(self, x: np.ndarray, y: np.ndarray) -> None:
         self.beta = self.beta - np.linalg.inv(log_likelihood_hessian(self.beta,
                                                                      x,
-                                                                     y,
                                                                      self.penalization,
                                                                      self.r,
                                                                      self.alpha)) @ log_likelihood_gradient(self.beta,
@@ -40,7 +26,7 @@ class LogitRegression:
         self.iter += 1
         return None
 
-    def get_log_likelihood(self, x, y):
+    def get_log_likelihood(self, x: np.ndarray, y: np.ndarray) -> float:
         return log_likelihood(self.beta,
                               x,
                               y,
@@ -48,16 +34,16 @@ class LogitRegression:
                               self.r,
                               self.alpha)
 
-    def predict_probas(self, x):
+    def predict_probas(self, x: np.ndarray):
         return exp_fact(self.beta, x)
 
-    def predict(self, x):
+    def predict(self, x: np.ndarray) -> np.ndarray:
         return x @ self.beta
 
-    def fit(self, x, y, epsilon=1e-5):
+    def fit(self, x, y, epsilon=1e-5) -> None:
         prev_beta = self.beta
         self.update_coef_nrm(x, y)
         self.iter += 1
-        while np.sqrt(np.transpose(self.beta - prev_beta) @ (self.beta - prev_beta))[0,0] > epsilon:
+        while np.sqrt(np.transpose(self.beta - prev_beta) @ (self.beta - prev_beta))[0, 0] > epsilon:
             prev_beta = self.beta
             self.update_coef_nrm(x, y)

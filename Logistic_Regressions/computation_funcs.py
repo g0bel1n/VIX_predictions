@@ -1,24 +1,25 @@
 import numpy as np
 
 
-def exp_fact(beta, x_array):
+def exp_fact(beta: np.ndarray, x_array: np.ndarray) -> np.ndarray:
     s = np.array([x_array @ beta])
     return (np.transpose(np.exp(s) / (1 + np.exp(s))))[0]
 
 
-def penalty(beta, alpha, r):
+def penalty(beta: np.ndarray, alpha: float, r: float) -> float:
     assert r <= 1, "r must be inferior to 1"
     return (r * np.sum(np.abs(beta))
             + (1 - r) * (sum(np.square(beta)) / 2)) * alpha
 
 
-def gradient_penalty(beta, alpha, r):
+def gradient_penalty(beta: np.ndarray, alpha: float, r: float) -> np.ndarray:
     assert r <= 1, "r must be inferior to 1"
     return (r * np.sign(beta)
             + (1 - r) * beta) * alpha
 
 
-def log_likelihood(beta, x_array: np.array, y_array: np.array, penalization=None, r=None, alpha=None):
+def log_likelihood(beta: np.ndarray, x_array: np.ndarray, y_array: np.ndarray, penalization=None, r=None,
+                   alpha=None) -> float:
     a = np.transpose(y_array) @ (x_array @ beta)
     b = np.sum(np.log(1 + np.exp(exp_fact(beta, x_array))))
 
@@ -34,14 +35,13 @@ def log_likelihood(beta, x_array: np.array, y_array: np.array, penalization=None
     return a - b + p
 
 
-def log_likelihood_hessian(beta, x, y, penalization=None, r=None, alpha=None):
-
+def log_likelihood_hessian(beta: np.ndarray, x: np.ndarray, penalization=None, r=None,
+                           alpha=None) -> np.ndarray:
     """
 
     wrong
     :param beta:
     :param x:
-    :param y:
     :param penalization:
     :param r:
     :param alpha:
@@ -49,7 +49,7 @@ def log_likelihood_hessian(beta, x, y, penalization=None, r=None, alpha=None):
     """
     d = np.diag(exp_fact(beta, x).ravel())
     a = np.dot(-np.transpose(x), d)
-    print("Hessian shape  ", np.dot(a,x).shape)
+    print("Hessian shape  ", np.dot(a, x).shape)
     if penalization == "l2":
         return np.dot(a, x) + alpha * np.eye(len(x[0]))
     elif penalization == 'Elastic Net':
@@ -58,7 +58,8 @@ def log_likelihood_hessian(beta, x, y, penalization=None, r=None, alpha=None):
         return np.dot(a, x)
 
 
-def log_likelihood_gradient(beta, x_array, y_vector, penalization=None, r=None, alpha=None):
+def log_likelihood_gradient(beta: np.ndarray, x_array: np.ndarray, y_vector: np.ndarray, penalization=None, r=None,
+                            alpha=None) -> np.ndarray:
     a = y_vector - exp_fact(beta, x_array)
 
     print(a.shape)
@@ -74,7 +75,7 @@ def log_likelihood_gradient(beta, x_array, y_vector, penalization=None, r=None, 
     return np.transpose(x_array) @ a + p
 
 
-def get_roc(y, probas):
+def get_roc(y: np.ndarray, probas: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
 
     :param y: true values of y vector
@@ -93,7 +94,7 @@ def get_roc(y, probas):
     return tpr_values, fpr_values
 
 
-def get_confusion_matrix_coef(y, y_pred):
+def get_confusion_matrix_coef(y: np.ndarray, y_pred: list[int]) -> tuple[int, int, int, int]:
     """
 
     :param y: true value of vector y
@@ -116,7 +117,7 @@ def get_confusion_matrix_coef(y, y_pred):
     return tn, fp, fn, tp
 
 
-def get_auc(x, y):
+def get_auc(x: np.ndarray, y: np.ndarray) -> float:
     """
     :param x: x axis values
     :param y: y axis values

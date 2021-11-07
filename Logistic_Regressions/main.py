@@ -5,7 +5,7 @@ from LogReg import LogitRegression
 from computation_funcs import get_roc, get_auc
 
 
-def simulate_data():
+def simulate_data() -> tuple[np.ndarray, np.ndarray]:
     x_array = np.ones((500, 3))
     x_array[:, 1:] = np.random.rand(500, 2)
     z = 1 + 2 * x_array[:, 1] - 3 * x_array[:, 2]
