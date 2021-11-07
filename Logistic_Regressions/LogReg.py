@@ -1,15 +1,29 @@
-from computation_funcs import *
+from Logistic_Regressions.computation_funcs import *
 
 
 class LogitRegression:
     def __init__(self, nb_expl_var, penalization=None, alpha=None, r=None):
-        self.beta = np.random.randint(-5, 5, nb_expl_var + 1)
+        self.beta = np.array([np.random.randint(-5, 5, nb_expl_var + 1)]).T
         self.iter = 0
         self.penalization = penalization
         self.alpha = alpha
         self.r = r
 
     def update_coef_nrm(self, x, y):
+        print("beta shape", self.beta.shape)
+        b = np.linalg.inv(log_likelihood_hessian(self.beta,
+                                                                     x,
+                                                                     y,
+                                                                     self.penalization,
+                                                                     self.r,
+                                                                     self.alpha)) @ log_likelihood_gradient(self.beta,
+                                                                                                            x,
+                                                                                                            y,
+                                                                                                            self.penalization,
+                                                                                                            self.r,
+                                                                                                            self.alpha)
+
+        print("b shape  ", b.shape)
         self.beta = self.beta - np.linalg.inv(log_likelihood_hessian(self.beta,
                                                                      x,
                                                                      y,
@@ -42,6 +56,6 @@ class LogitRegression:
         prev_beta = self.beta
         self.update_coef_nrm(x, y)
         self.iter += 1
-        while np.sqrt(np.transpose(self.beta - prev_beta) @ (self.beta - prev_beta)) > epsilon:
+        while np.sqrt(np.transpose(self.beta - prev_beta) @ (self.beta - prev_beta))[0,0] > epsilon:
             prev_beta = self.beta
             self.update_coef_nrm(x, y)

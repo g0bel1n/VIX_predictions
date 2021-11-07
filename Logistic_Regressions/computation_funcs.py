@@ -2,8 +2,8 @@ import numpy as np
 
 
 def exp_fact(beta, x_array):
-    s = np.dot(x_array, beta)
-    return np.exp(s) / (1 + np.exp(s))
+    s = np.array([x_array @ beta])
+    return (np.transpose(np.exp(s) / (1 + np.exp(s))))[0]
 
 
 def penalty(beta, alpha, r):
@@ -19,7 +19,6 @@ def gradient_penalty(beta, alpha, r):
 
 
 def log_likelihood(beta, x_array: np.array, y_array: np.array, penalization=None, r=None, alpha=None):
-    assert len(x_array) == len(y_array), "Len(X) != Len(Y)"
     a = np.transpose(y_array) @ (x_array @ beta)
     b = np.sum(np.log(1 + np.exp(exp_fact(beta, x_array))))
 
@@ -36,9 +35,21 @@ def log_likelihood(beta, x_array: np.array, y_array: np.array, penalization=None
 
 
 def log_likelihood_hessian(beta, x, y, penalization=None, r=None, alpha=None):
-    assert len(x) == len(y), "Len(X) != Len(Y)"
-    d = np.diag(exp_fact(beta, x))
+
+    """
+
+    wrong
+    :param beta:
+    :param x:
+    :param y:
+    :param penalization:
+    :param r:
+    :param alpha:
+    :return:
+    """
+    d = np.diag(exp_fact(beta, x).ravel())
     a = np.dot(-np.transpose(x), d)
+    print("Hessian shape  ", np.dot(a,x).shape)
     if penalization == "l2":
         return np.dot(a, x) + alpha * np.eye(len(x[0]))
     elif penalization == 'Elastic Net':
@@ -48,7 +59,10 @@ def log_likelihood_hessian(beta, x, y, penalization=None, r=None, alpha=None):
 
 
 def log_likelihood_gradient(beta, x_array, y_vector, penalization=None, r=None, alpha=None):
-    a = np.transpose(y_vector - exp_fact(beta, x_array))
+    a = y_vector - exp_fact(beta, x_array)
+
+    print(a.shape)
+    print("gradient shape ", (np.transpose(x_array) @ a).shape)
     if penalization == 'l1':
         p = gradient_penalty(beta, alpha, r=1)
     elif penalization == 'l2':
@@ -57,7 +71,7 @@ def log_likelihood_gradient(beta, x_array, y_vector, penalization=None, r=None, 
         p = gradient_penalty(beta, alpha, r)
     else:
         p = 0
-    return a @ x_array + p
+    return np.transpose(x_array) @ a + p
 
 
 def get_roc(y, probas):
