@@ -1,7 +1,10 @@
+# %% Imports & setup
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import sys             # Pour pouvoir importer 
+sys.path.append("..")  # depuis le fichier parent
 from Logistic_Regressions.LogReg import LogitRegression
 from Logistic_Regressions.computation_funcs import get_roc, get_auc
 
@@ -24,7 +27,7 @@ y = y[7:]
 print(x.shape)
 
 
-# Logistics Regressions
+# %% Logistics Regressions
 reglog = LogitRegression(nb_expl_var=7)
 reglog_lasso = LogitRegression(nb_expl_var=7, penalization='l1', alpha=1)
 reglog_ridge = LogitRegression(nb_expl_var=7, penalization='l2', alpha=1)
@@ -57,3 +60,5 @@ plt.xlabel('FPR', fontsize=16)
 plt.legend(fontsize=12)
 plt.show()
 
+
+# %%
