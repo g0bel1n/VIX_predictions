@@ -1,0 +1,4 @@
+[submodule "MetaPipeline"]
+	path = MetaPipeline
+	url = https://github.com/g0bel1n/MetaPipeline.git
+	branch = master
