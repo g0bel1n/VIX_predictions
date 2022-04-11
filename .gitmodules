@@ -1,3 +1,9 @@
-[submodule "TinyAutoML_VIX"]
-	path = TinyAutoML_VIX
-	url = https://github.com/g0bel1n/TinyAutoML
+[submodule "Tam"]
+	path = Tam
+	url = https://github.com/g0bel1n/TinyAutoML.git
+[submodule "TAM"]
+	path = TAM
+	url = https://github.com/g0bel1n/TinyAutoML.git
+[submodule "tam_expe"]
+	path = tam_expe
+	url = https://github.com/g0bel1n/TinyAutoML.git
