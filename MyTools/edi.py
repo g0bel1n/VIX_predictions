@@ -5,7 +5,7 @@ import pandas as pd
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import TimeSeriesSplit
-from tools.add_AR_cols import add_AR_cols
+from MyTools.add_AR_cols import add_AR_cols
 from data_treatment.box_creator import create_binary_box
 
 if not "root" in locals():
